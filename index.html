@@ -2,28 +2,33 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Folders</title>
+    <title>Index</title>
     <style>
         body { font-family: Arial; padding: 20px; }
         a { display: block; margin: 8px 0; font-size: 18px; }
     </style>
 </head>
 <body>
-    <h1>Folders</h1>
-    <div id="list"></div>
+    <h1>Folders in root</h1>
+    <div id="list">Loading...</div>
 
     <script>
         fetch("/api/list")
             .then(r => r.json())
             .then(folders => {
                 const div = document.getElementById("list");
+                div.innerHTML = "";
                 folders.forEach(f => {
                     const a = document.createElement("a");
                     a.href = f + "/";
                     a.textContent = f;
                     div.appendChild(a);
                 });
+            })
+            .catch(err => {
+                document.getElementById("list").textContent = "Error loading folders";
             });
     </script>
 </body>
 </html>
+
