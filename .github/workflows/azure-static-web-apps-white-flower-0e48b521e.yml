@@ -17,21 +17,21 @@ jobs:
     permissions:
        id-token: write
        contents: read
+
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
 
-      # Node installeren zodat jouw API werkt
+      # Nodig voor jouw API in /api
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # Dependencies installeren (alleen nodig voor API)
-      - name: Install dependencies
-        run: npm install
+      # Dependencies installeren voor de API
+      - name: Install API dependencies
+        run: |
+          cd api
+          npm install
 
       - name: Build And Deploy
         id: builddeploy
@@ -40,17 +40,14 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_FLOWER_0E48B521E }}
           action: "upload"
 
-          # Jouw HTML staat in root
+          # Frontend staat in root
           app_location: "/"
 
-          # Jouw API staat in /api
+          # API staat in /api
           api_location: "api"
 
-          # Geen echte build → output is gewoon root
+          # Geen build voor frontend → output is root
           output_location: "/"
-
-          # Nep-build zodat Azure niet crasht
-          app_build_command: "npm run build"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
