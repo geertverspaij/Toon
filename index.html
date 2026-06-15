@@ -54,7 +54,7 @@ async function loadGallery() {
 
             data[folder].forEach(file => {
                 const img = document.createElement("img");
-                img.src = `/images/${folder}/${file}`;
+                img.src = file;
                 gallery.appendChild(img);
             });
 

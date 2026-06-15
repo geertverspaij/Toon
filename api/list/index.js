@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = async function (req, res) {
   try {
-    const basePath = path.join(process.cwd(), "public", "images");
+    const basePath = path.join(__dirname, "..", "..", "public", "images");
 
     const folders = fs.readdirSync(basePath).filter((file) => {
       return fs.statSync(path.join(basePath, file)).isDirectory();
@@ -19,7 +19,6 @@ module.exports = async function (req, res) {
                file.toLowerCase().endsWith(".png");
       });
 
-      // Geef volledige URL terug
       result[folder] = files.map(f => `/images/${folder}/${f}`);
     }
 
