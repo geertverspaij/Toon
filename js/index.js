@@ -1,2 +1,2 @@
-console.log('Hierben ik');
+console.log('Hier ben ik');
 
