@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
-export default async function (req, res) {
+module.exports = async function (req, res) {
   try {
     const basePath = path.join(process.cwd(), "images");
 
@@ -16,18 +16,19 @@ export default async function (req, res) {
     for (const folder of folders) {
       const folderPath = path.join(basePath, folder);
       const files = fs.readdirSync(folderPath).filter((file) => {
-        return file.toLowerCase().endsWith(".jpg") ||
-               file.toLowerCase().endsWith(".jpeg") ||
-               file.toLowerCase().endsWith(".png");
+        return (
+          file.toLowerCase().endsWith(".jpg") ||
+          file.toLowerCase().endsWith(".jpeg") ||
+          file.toLowerCase().endsWith(".png")
+        );
       });
 
       result[folder] = files;
     }
 
     res.status(200).json(result);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Kon afbeeldingen niet laden" });
   }
-}
+};
