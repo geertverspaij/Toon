@@ -1,34 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <title>Foto Galerij</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        a { display: block; margin: 8px 0; font-size: 18px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-top: 40px;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .gallery img {
+            width: 200px;
+            height: auto;
+            border-radius: 6px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
-    <h1>Folders in root</h1>
-    <div id="list">Loading...</div>
 
-    <script>
-        fetch("/api/list")
-            .then(r => r.json())
-            .then(folders => {
-                const div = document.getElementById("list");
-                div.innerHTML = "";
-                folders.forEach(f => {
-                    const a = document.createElement("a");
-                    a.href = f + "/";
-                    a.textContent = f;
-                    div.appendChild(a);
-                });
-            })
-            .catch(err => {
-                document.getElementById("list").textContent = "Error loading folders";
+<h1>Foto Galerij</h1>
+<div id="content">Bezig met laden…</div>
+
+<script>
+async function loadGallery() {
+    const container = document.getElementById("content");
+
+    try {
+        const response = await fetch("/api/list");
+        const data = await response.json();
+
+        container.innerHTML = "";
+
+        for (const folder in data) {
+            const section = document.createElement("section");
+
+            const title = document.createElement("h2");
+            title.textContent = folder.charAt(0).toUpperCase() + folder.slice(1);
+            section.appendChild(title);
+
+            const gallery = document.createElement("div");
+            gallery.className = "gallery";
+
+            data[folder].forEach(file => {
+                const img = document.createElement("img");
+                img.src = `/images/${folder}/${file}`;
+                gallery.appendChild(img);
             });
-    </script>
+
+            section.appendChild(gallery);
+            container.appendChild(section);
+        }
+
+    } catch (err) {
+        container.innerHTML = "Fout bij laden van afbeeldingen.";
+        console.error(err);
+    }
+}
+
+loadGallery();
+</script>
+
 </body>
 </html>
+
 
