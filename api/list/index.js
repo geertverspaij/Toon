@@ -8,6 +8,7 @@ module.exports = async function (req, res) {
     const folders = fs.readdirSync(basePath).filter((file) => {
       return fs.statSync(path.join(basePath, file)).isDirectory();
     });
+    console.error(folders);
 
     const result = {};
 
@@ -20,11 +21,12 @@ module.exports = async function (req, res) {
       });
 
       result[folder] = files.map(f => `/images/${folder}/${f}`);
+      console.log(result[folder]);
     }
 
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Kon afbeeldingen niet laden" });
+    res.status(200).json({ error: err.message, stack: err.stack });
   }
 };
