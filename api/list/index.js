@@ -3,27 +3,24 @@ const path = require("path");
 
 module.exports = async function (req, res) {
   try {
-    const basePath = path.join(process.cwd(), "images");
+    const basePath = path.join(process.cwd(), "public", "images");
 
-    // Alle folders in /images ophalen
     const folders = fs.readdirSync(basePath).filter((file) => {
       return fs.statSync(path.join(basePath, file)).isDirectory();
     });
 
     const result = {};
 
-    // Per folder alle foto's ophalen
     for (const folder of folders) {
       const folderPath = path.join(basePath, folder);
       const files = fs.readdirSync(folderPath).filter((file) => {
-        return (
-          file.toLowerCase().endsWith(".jpg") ||
-          file.toLowerCase().endsWith(".jpeg") ||
-          file.toLowerCase().endsWith(".png")
-        );
+        return file.toLowerCase().endsWith(".jpg") ||
+               file.toLowerCase().endsWith(".jpeg") ||
+               file.toLowerCase().endsWith(".png");
       });
 
-      result[folder] = files;
+      // Geef volledige URL terug
+      result[folder] = files.map(f => `/images/${folder}/${f}`);
     }
 
     res.status(200).json(result);
